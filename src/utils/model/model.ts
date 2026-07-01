@@ -571,11 +571,11 @@ export function parseUserSpecifiedModel(
   // managed-model aliases — an id that collides with a reserved alias (e.g.
   // `glm-5.2`, `k2.7`) would otherwise be rewritten to an internal deployment
   // path the user's server does not recognize, causing a 404.
-  const exactNcodeModel = isOpenAICompatByokActive()
-    ? undefined
-    : resolveNCodeManagedModel(normalizedModel)
-  if (exactNcodeModel) {
-    return exactNcodeModel.model
+  if (!isOpenAICompatByokActive()) {
+    const exactNcodeModel = resolveNCodeManagedModel(normalizedModel)
+    if (exactNcodeModel) {
+      return exactNcodeModel.model
+    }
   }
 
   if (isModelAlias(modelString)) {
@@ -596,11 +596,11 @@ export function parseUserSpecifiedModel(
 
   // See the BYOK note above: managed-alias resolution is skipped entirely for
   // BYOK OpenAI-compat sessions so the user's model id is forwarded verbatim.
-  const ncodeModel = isOpenAICompatByokActive()
-    ? undefined
-    : resolveNCodeManagedModel(modelString)
-  if (ncodeModel) {
-    return ncodeModel.model
+  if (!isOpenAICompatByokActive()) {
+    const ncodeModel = resolveNCodeManagedModel(modelString)
+    if (ncodeModel) {
+      return ncodeModel.model
+    }
   }
 
   // Opus 4/4.1 are no longer available on the first-party API (same as
